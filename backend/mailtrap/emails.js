@@ -21,3 +21,20 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     throw new Error("Failed to send email:", error);
   }
 };
+
+export const sendWelcomeEmail = async (email, name) => {
+  const recipient = [{ email }];
+
+  try {
+    const response = await mailtrapClient.send({
+      from: sender,
+      to: recipient,
+      template_uuid: "34cac558-3baf-4897-901f-00006b12656b",
+      template_variables: {
+        company_info_name: "Rage Authentication",
+        name: name,
+      },
+    });
+    console.log("Welcome Email sent successfully:", response);
+  } catch (error) {}
+};
