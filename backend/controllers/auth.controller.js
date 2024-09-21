@@ -97,12 +97,59 @@ export const verifyEmail = async (req, res) => {
   }
 };
 
-// Login controller (currently a placeholder)
+// Login controller
 export const login = async (req, res) => {
-  res.send("login route"); // Placeholder response for login
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid password" });
+    }
+    generateTokenAndSetCookie(res, user._id);
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Logged in successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
+  } catch (error) {
+    console.log("Error in login", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
 
-// Logout controller (currently a placeholder)
+// Logout controller
 export const logout = async (req, res) => {
-  res.send("logout route"); // Placeholder response for logout
+  res.clearCookie("token"); // Clear the token cookie
+  res.status(200).json({ success: true, message: "Logged out successfully" });
+};
+
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found" });
+    }
+
+    //Generate reset token
+
+    // const resetToken
+  } catch (error) {}
 };
