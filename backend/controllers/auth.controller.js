@@ -1,7 +1,14 @@
 import bcryptjs from "bcryptjs"; // Import bcryptjs for password hashing
+import crypto from "crypto";
+
 import User from "../models/user.model.js"; // Import the User model for database interactions
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js"; // Import function to generate token and set cookies
-import { sendVerificationEmail, sendWelcomeEmail } from "../mailtrap/emails.js"; // Import function to send verification email
+import {
+  sendPasswordResetEmail,
+  sendResetSuccessEmail,
+  sendVerificationEmail,
+  sendWelcomeEmail,
+} from "../mailtrap/emails.js"; // Import function to send verification email
 
 // Signup controller function to handle new user registration
 export const signup = async (req, res) => {
@@ -149,7 +156,73 @@ export const forgotPassword = async (req, res) => {
     }
 
     //Generate reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hours
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpiresAt = resetTokenExpiresAt;
+    await user.save();
+    //send email
+    await sendPasswordResetEmail(
+      user.email,
+      `${process.env.CLIENT_URL}/reset-password/${resetToken}`
+    );
 
-    // const resetToken
-  } catch (error) {}
+    res.status(200).json({
+      success: true,
+      message: "Password reset email sent successfully",
+    });
+  } catch (error) {
+    console.log("Error in forgotPassword", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid or expired token" });
+    }
+    //update new passord
+    const hashedPassword = await bcryptjs.hash(password, 10);
+    user.password = hashedPassword;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpiresAt = undefined;
+    await user.save();
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+    await sendResetSuccessEmail(user.email);
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+    console.log("Error in resetPassword", error);
+  }
+};
+
+export const checkAuth = async (req, res) => {
+  const user = await User.findById(req.userId);
+  if (!user) {
+    return res.status(400).json({ success: false, message: "User not found" });
+  }
+  res.status(200).json({
+    success: true,
+    message: "User found",
+    user: {
+      ...user._doc,
+      password: undefined,
+    },
+  });
+  try {
+  } catch (error) {
+    console.log("Error in checkAuth", error);
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
