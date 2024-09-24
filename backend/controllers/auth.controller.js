@@ -1,6 +1,5 @@
 import bcryptjs from "bcryptjs"; // Import bcryptjs for password hashing
 import crypto from "crypto";
-
 import User from "../models/user.model.js"; // Import the User model for database interactions
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js"; // Import function to generate token and set cookies
 import {
