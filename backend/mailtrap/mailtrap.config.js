@@ -8,8 +8,8 @@ export const mailtrapClient = new MailtrapClient({
 });
 
 export const sender = {
-  email: "mailtrap@demomailtrap.com",
-  name: "Rage",
+  email: "auth.handler@therage.site",
+  name: "Rage Authentication",
 };
 
 // const recipients = [

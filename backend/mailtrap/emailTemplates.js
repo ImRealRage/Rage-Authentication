@@ -52,7 +52,7 @@ export const VERIFICATION_EMAIL_TEMPLATE = `
     <p>Enter this code on the verification page to complete your registration.</p>
     <p>This code will expire in <strong>15 minutes</strong> for security reasons.</p>
     <p>If you didn't create an account with us, please ignore this email.</p>
-    <p style="margin-top: 40px;">Best regards,<br><strong>Your App Team</strong></p>
+    <p style="margin-top: 40px;">Best regards,<br><strong>The Rage</strong></p>
   </div>
   <div style="text-align: center; margin-top: 30px; color: #aaaaaa; font-size: 0.9em;">
     <p>This is an automated message, please do not reply.</p>
@@ -129,7 +129,7 @@ export const PASSWORD_RESET_SUCCESS_TEMPLATE = `
       <li>Avoid using the same password across multiple sites</li>
     </ul>
     <p style="margin-top: 40px;">Thank you for helping us keep your account secure.</p>
-    <p>Best regards,<br><strong>Your App Team</strong></p>
+    <p>Best regards,<br><strong>The Rage</strong></p>
   </div>
   <div style="text-align: center; margin-top: 30px; color: #aaaaaa; font-size: 0.9em;">
     <p>This is an automated message, please do not reply.</p>
@@ -190,7 +190,7 @@ export const PASSWORD_RESET_REQUEST_TEMPLATE = `
       <a href="{resetURL}" style="background: linear-gradient(to right, #6a11cb, #2575fc); color: #ffffff; padding: 15px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Reset Password</a>
     </div>
     <p>This link will expire in <strong>1 hour</strong> for security reasons.</p>
-    <p style="margin-top: 40px;">Best regards,<br><strong>Your App Team</strong></p>
+    <p style="margin-top: 40px;">Best regards,<br><strong>The Rage</strong></p>
   </div>
   <div style="text-align: center; margin-top: 30px; color: #aaaaaa; font-size: 0.9em;">
     <p>This is an automated message, please do not reply.</p>
